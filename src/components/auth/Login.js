@@ -20,11 +20,11 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     try {
-      //await axios.post("http://localhost:5000/auth/login", data);
-      await axios.post(
+      const response = await axios.post(
         "https://memory-card-backend.herokuapp.com/auth/login",
         data
       );
+      localStorage.setItem("token", response.data.token);
       await getLoggedIn();
       navigate("/");
     } catch (err) {

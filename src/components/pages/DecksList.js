@@ -22,7 +22,6 @@ const DecksList = () => {
 
   const getDecksByOwnerId = async (id) => {
     try {
-      //const response = await axios.get(`http://localhost:5000/deck/user/${id}`);
       const response = await axios.get(
         `https://memory-card-backend.herokuapp.com/deck/user/${id}`
       );
@@ -40,7 +39,6 @@ const DecksList = () => {
 
   const deleteDeck = async (id) => {
     try {
-      //await axios.delete(`http://localhost:5000/deck/${id}`);
       await axios.delete(
         `https://memory-card-backend.herokuapp.com/deck/${id}`
       );

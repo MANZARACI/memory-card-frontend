@@ -4,17 +4,24 @@ import React, { useState, useEffect, createContext } from "react";
 const AuthContext = createContext();
 
 const AuthContextProvider = (props) => {
-  const [loggedIn, setLoggedIn] = useState(undefined);
-  const [currentUser, setCurrentUser] = useState(undefined);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState(false);
 
   const getLoggedIn = async () => {
-    //const loggedInRes = await axios.get("http://localhost:5000/auth/loggedIn");
-    const loggedInRes = await axios.get(
-      "https://memory-card-backend.herokuapp.com/auth/loggedIn"
-    );
-    setLoggedIn(loggedInRes.data.isLoggedIn);
-    if (loggedInRes.data.isLoggedIn) {
-      setCurrentUser(loggedInRes.data.user);
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      axios.defaults.headers.common["x-auth-token"] = token;
+      const response = await axios.get("https://memory-card-backend.herokuapp.com/auth/loggedIn");
+
+      setLoggedIn(response.data.isLoggedIn);
+      if (response.data.isLoggedIn) {
+        setCurrentUser(response.data.user);
+      }
+    } else {
+      delete axios.defaults.headers.common["x-auth-token"];
+      setLoggedIn(false);
+      setCurrentUser(false);
     }
   };
 

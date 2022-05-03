@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useContext } from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
@@ -10,8 +9,7 @@ const Navigation = () => {
   const navigate = useNavigate();
 
   const logoutHandler = async () => {
-    //await axios.get("http://localhost:5000/auth/logout");
-    await axios.get("https://memory-card-backend.herokuapp.com/auth/logout");
+    localStorage.removeItem("token");
     await getLoggedIn();
     navigate("/");
   };

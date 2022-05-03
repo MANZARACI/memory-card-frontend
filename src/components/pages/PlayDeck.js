@@ -14,7 +14,6 @@ const PlayDeck = () => {
 
   const getDeckInfo = async (id) => {
     try {
-      //const response = await axios.get(`http://localhost:5000/deck/${id}`);
       const response = await axios.get(
         `https://memory-card-backend.herokuapp.com/deck/${id}`
       );

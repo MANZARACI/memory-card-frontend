@@ -30,7 +30,6 @@ const EditDeck = () => {
 
   const getDeckInfo = async (id) => {
     try {
-      //const response = await axios.get(`http://localhost:5000/deck/${id}`);
       const response = await axios.get(
         `https://memory-card-backend.herokuapp.com/deck/${id}`
       );
@@ -64,7 +63,6 @@ const EditDeck = () => {
 
   const addCard = async (card) => {
     try {
-      //await axios.patch(`http://localhost:5000/deck/${deckId}`, {card: card});
       await axios.patch(
         `https://memory-card-backend.herokuapp.com/deck/${deckId}`,
         { card: card }
@@ -81,7 +79,6 @@ const EditDeck = () => {
 
   const updateCard = async (card) => {
     try {
-      //await axios.patch(`http://localhost:5000/deck/${deckId}/${shownCard - 1}`,{ card: card });
       await axios.patch(
         `https://memory-card-backend.herokuapp.com/deck/${deckId}/${
           shownCard - 1
@@ -100,7 +97,6 @@ const EditDeck = () => {
 
   const deleteCard = async () => {
     try {
-      //await axios.delete(`http://localhost:5000/deck/${deckId}/${shownCard - 1}`);
       await axios.delete(
         `https://memory-card-backend.herokuapp.com/deck/${deckId}/${
           shownCard - 1
@@ -122,7 +118,6 @@ const EditDeck = () => {
 
   const updateTitle = async () => {
     try {
-      //await axios.patch(`http://localhost:5000/deck/${deckId}/title`, {newTitle: newTitle});
       await axios.patch(
         `https://memory-card-backend.herokuapp.com/deck/${deckId}/title`,
         { newTitle: newTitle }
