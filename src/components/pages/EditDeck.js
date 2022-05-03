@@ -30,7 +30,10 @@ const EditDeck = () => {
 
   const getDeckInfo = async (id) => {
     try {
-      const response = await axios.get(`http://localhost:5000/deck/${id}`);
+      //const response = await axios.get(`http://localhost:5000/deck/${id}`);
+      const response = await axios.get(
+        `https://memory-card-backend.herokuapp.com/deck/${id}`
+      );
       setCurrentDeck(response.data);
     } catch (err) {
       if (err.response.data.errorMessage) {
@@ -61,9 +64,11 @@ const EditDeck = () => {
 
   const addCard = async (card) => {
     try {
-      await axios.patch(`http://localhost:5000/deck/${deckId}`, {
-        card: card,
-      });
+      //await axios.patch(`http://localhost:5000/deck/${deckId}`, {card: card});
+      await axios.patch(
+        `https://memory-card-backend.herokuapp.com/deck/${deckId}`,
+        { card: card }
+      );
       await getDeckInfo(deckId);
       setModalMode("");
     } catch (err) {
@@ -76,8 +81,11 @@ const EditDeck = () => {
 
   const updateCard = async (card) => {
     try {
+      //await axios.patch(`http://localhost:5000/deck/${deckId}/${shownCard - 1}`,{ card: card });
       await axios.patch(
-        `http://localhost:5000/deck/${deckId}/${shownCard - 1}`,
+        `https://memory-card-backend.herokuapp.com/deck/${deckId}/${
+          shownCard - 1
+        }`,
         { card: card }
       );
       await getDeckInfo(deckId);
@@ -92,8 +100,11 @@ const EditDeck = () => {
 
   const deleteCard = async () => {
     try {
+      //await axios.delete(`http://localhost:5000/deck/${deckId}/${shownCard - 1}`);
       await axios.delete(
-        `http://localhost:5000/deck/${deckId}/${shownCard - 1}`
+        `https://memory-card-backend.herokuapp.com/deck/${deckId}/${
+          shownCard - 1
+        }`
       );
       await getDeckInfo(deckId);
       if (shownCard !== 1) {
@@ -111,9 +122,11 @@ const EditDeck = () => {
 
   const updateTitle = async () => {
     try {
-      await axios.patch(`http://localhost:5000/deck/${deckId}/title`, {
-        newTitle: newTitle,
-      });
+      //await axios.patch(`http://localhost:5000/deck/${deckId}/title`, {newTitle: newTitle});
+      await axios.patch(
+        `https://memory-card-backend.herokuapp.com/deck/${deckId}/title`,
+        { newTitle: newTitle }
+      );
       await getDeckInfo(deckId);
       document.body.click();
     } catch (err) {

@@ -20,7 +20,11 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     try {
-      await axios.post("http://localhost:5000/auth/login", data);
+      //await axios.post("http://localhost:5000/auth/login", data);
+      await axios.post(
+        "https://memory-card-backend.herokuapp.com/auth/login",
+        data
+      );
       await getLoggedIn();
       navigate("/");
     } catch (err) {
@@ -50,7 +54,9 @@ const Login = () => {
             })}
           />
         </Form.Group>
-        {errors.email && <p className={classess.errorText}>Email must be valid</p>}
+        {errors.email && (
+          <p className={classess.errorText}>Email must be valid</p>
+        )}
         <Form.Group className="mt-3" controlId="password">
           <Form.Label>Password</Form.Label>
           <Form.Control
@@ -58,7 +64,11 @@ const Login = () => {
             {...register("password", { required: true, minLength: 6 })}
           />
         </Form.Group>
-        {errors.password && <p className={classess.errorText}>Password must be at least 6 characters long</p>}
+        {errors.password && (
+          <p className={classess.errorText}>
+            Password must be at least 6 characters long
+          </p>
+        )}
 
         <Button type="submit" className="w-100 mt-4">
           Login

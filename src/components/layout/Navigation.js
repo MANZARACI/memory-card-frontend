@@ -10,7 +10,8 @@ const Navigation = () => {
   const navigate = useNavigate();
 
   const logoutHandler = async () => {
-    await axios.get("http://localhost:5000/auth/logout");
+    //await axios.get("http://localhost:5000/auth/logout");
+    await axios.get("https://memory-card-backend.herokuapp.com/auth/logout");
     await getLoggedIn();
     navigate("/");
   };

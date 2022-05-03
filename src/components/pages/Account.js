@@ -15,14 +15,16 @@ const Account = () => {
   const navigate = useNavigate();
 
   const logoutHandler = async () => {
-    await axios.get("http://localhost:5000/auth/logout");
+    //await axios.get("http://localhost:5000/auth/logout");
+    await axios.get("https://memory-card-backend.herokuapp.com/auth/logout");
     await getLoggedIn();
     navigate("/login");
   };
 
   const editAccountInfo = async () => {
     try {
-      await axios.patch(`http://localhost:5000/auth/edit`, {
+      //await axios.patch(`http://localhost:5000/auth/edit`, {firstName,lastName});
+      await axios.patch("https://memory-card-backend.herokuapp.com/auth/edit", {
         firstName,
         lastName,
       });
