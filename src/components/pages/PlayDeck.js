@@ -15,7 +15,7 @@ const PlayDeck = () => {
   const getDeckInfo = async (id) => {
     try {
       const response = await axios.get(
-        `https://memory-card-backend.herokuapp.com/deck/${id}`
+        `https://memory-card-backend.onrender.com/deck/${id}`
       );
       setCurrentDeck(response.data);
     } catch (err) {
