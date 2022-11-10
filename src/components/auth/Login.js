@@ -21,7 +21,7 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        "https://memory-card-backend.herokuapp.com/auth/login",
+        "https://memory-card-backend.onrender.com/auth/login",
         data
       );
       localStorage.setItem("token", response.data.token);
