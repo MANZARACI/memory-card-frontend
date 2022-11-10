@@ -22,7 +22,7 @@ const Account = () => {
 
   const editAccountInfo = async () => {
     try {
-      await axios.patch("https://memory-card-backend.herokuapp.com/auth/edit", {
+      await axios.patch("https://memory-card-backend.onrender.com/auth/edit", {
         firstName,
         lastName,
       });
