@@ -12,7 +12,7 @@ const AuthContextProvider = (props) => {
 
     if (token) {
       axios.defaults.headers.common["x-auth-token"] = token;
-      const response = await axios.get("https://memory-card-backend.herokuapp.com/auth/loggedIn");
+      const response = await axios.get("https://memory-card-backend.onrender.com/auth/loggedIn");
 
       setLoggedIn(response.data.isLoggedIn);
       if (response.data.isLoggedIn) {
