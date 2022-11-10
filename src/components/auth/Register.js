@@ -20,7 +20,7 @@ const Register = () => {
 
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post("https://memory-card-backend.herokuapp.com/auth", data);
+      const response = await axios.post("https://memory-card-backend.onrender.com/auth", data);
       localStorage.setItem("token", response.data.token);
       await getLoggedIn();
       navigate("/");
