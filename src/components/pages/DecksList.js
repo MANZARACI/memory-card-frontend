@@ -23,7 +23,7 @@ const DecksList = () => {
   const getDecksByOwnerId = async (id) => {
     try {
       const response = await axios.get(
-        `https://memory-card-backend.herokuapp.com/deck/user/${id}`
+        `https://memory-card-backend.onrender.com/deck/user/${id}`
       );
       setDecks(response.data);
     } catch (err) {
@@ -40,7 +40,7 @@ const DecksList = () => {
   const deleteDeck = async (id) => {
     try {
       await axios.delete(
-        `https://memory-card-backend.herokuapp.com/deck/${id}`
+        `https://memory-card-backend.onrender.com/deck/${id}`
       );
       await getDecksByOwnerId(ownerId);
     } catch (err) {
