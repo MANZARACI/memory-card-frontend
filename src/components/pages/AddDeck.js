@@ -15,7 +15,7 @@ const AddDeck = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("https://memory-card-backend.herokuapp.com/deck", {
+      await axios.post("https://memory-card-backend.onrender.com/deck", {
         title: title,
       });
       navigate(`/deckList/${currentUser._id}`);
