@@ -20,8 +20,18 @@ const Register = () => {
 
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post("https://memory-card-backend.onrender.com/auth", data);
-      localStorage.setItem("token", response.data.token);
+      await axios.post(
+        "https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/register",
+        data
+      );
+
+      const loginResponse = await axios.post(
+        "https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/login",
+        data
+      );
+
+      const responseBody = JSON.parse(loginResponse.data.body);
+      localStorage.setItem("token", responseBody.token);
       await getLoggedIn();
       navigate("/");
     } catch (err) {
@@ -39,22 +49,22 @@ const Register = () => {
         </Alert>
       )}
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Form.Group controlId="firstName">
+        <Form.Group controlId="firstname">
           <Form.Label>First Name</Form.Label>
           <Form.Control
             type="text"
-            {...register("firstName", { required: true })}
+            {...register("firstname", { required: true })}
             maxLength={20}
           />
         </Form.Group>
         {errors.firstName && (
           <p className={classess.errorText}>You must enter a First Name</p>
         )}
-        <Form.Group className="mt-3" controlId="lastName">
+        <Form.Group className="mt-3" controlId="lastname">
           <Form.Label>Last Name</Form.Label>
           <Form.Control
             type="text"
-            {...register("lastName", { required: true })}
+            {...register("lastname", { required: true })}
             maxLength={20}
           />
         </Form.Group>
@@ -87,11 +97,11 @@ const Register = () => {
             Password must be at least 6 characters long
           </p>
         )}
-        <Form.Group className="mt-3" controlId="passwordVerify">
+        <Form.Group className="mt-3" controlId="passwordverify">
           <Form.Label>Password Verify</Form.Label>
           <Form.Control
             type="password"
-            {...register("passwordVerify", { required: true, minLength: 6 })}
+            {...register("passwordverify", { required: true, minLength: 6 })}
           />
         </Form.Group>
         {errors.passwordVerify && (

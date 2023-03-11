@@ -21,10 +21,11 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        "https://memory-card-backend.onrender.com/auth/login",
+        "https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/login",
         data
       );
-      localStorage.setItem("token", response.data.token);
+      const responseBody = JSON.parse(response.data.body);
+      localStorage.setItem("token", responseBody.token);
       await getLoggedIn();
       navigate("/");
     } catch (err) {

@@ -9,15 +9,20 @@ const AddDeck = () => {
   const [error, setError] = useState(false);
 
   const { currentUser } = useContext(AuthContext);
+  const token = localStorage.getItem("token");
 
   const navigate = useNavigate();
 
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("https://memory-card-backend.onrender.com/deck", {
-        title: title,
-      });
+      await axios.post(
+        "https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/adddeck",
+        {
+          title: title,
+          token,
+        }
+      );
       navigate(`/deckList/${currentUser._id}`);
     } catch (err) {
       if (err.response.data.errorMessage) {

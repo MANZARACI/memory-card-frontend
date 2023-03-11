@@ -31,9 +31,14 @@ const EditDeck = () => {
   const getDeckInfo = async (id) => {
     try {
       const response = await axios.get(
-        `https://memory-card-backend.onrender.com/deck/${id}`
+        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/getdeckbyid/${id}`
       );
-      setCurrentDeck(response.data);
+
+      setCurrentDeck({
+        Title: response.data.Item.Title.S.replace("%20", " "),
+        deckID: response.data.Item.deckID.S,
+        userid: response.data.Item.userid.S,
+      });
     } catch (err) {
       if (err.response.data.errorMessage) {
         setError(err.response.data.errorMessage);
@@ -64,12 +69,13 @@ const EditDeck = () => {
   const addCard = async (card) => {
     try {
       await axios.patch(
-        `https://memory-card-backend.onrender.com/deck/${deckId}`,
+        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/addcardtodeck/${deckId}`,
         { card: card }
       );
       await getDeckInfo(deckId);
       setModalMode("");
     } catch (err) {
+      console.log(err);
       if (err.response.data.errorMessage) {
         setError(err.response.data.errorMessage);
       }
@@ -80,7 +86,7 @@ const EditDeck = () => {
   const updateCard = async (card) => {
     try {
       await axios.patch(
-        `https://memory-card-backend.onrender.com/deck/${deckId}/${
+        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/updatecardbyid/${deckId}/${
           shownCard - 1
         }`,
         { card: card }
@@ -98,7 +104,7 @@ const EditDeck = () => {
   const deleteCard = async () => {
     try {
       await axios.delete(
-        `https://memory-card-backend.onrender.com/deck/${deckId}/${
+        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/deletecardbyid/${deckId}/${
           shownCard - 1
         }`
       );
@@ -118,9 +124,8 @@ const EditDeck = () => {
 
   const updateTitle = async () => {
     try {
-      await axios.patch(
-        `https://memory-card-backend.onrender.com/deck/${deckId}/title`,
-        { newTitle: newTitle }
+      await axios.put(
+        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/updatedecktitle/${currentDeck.deckID}/${newTitle}`
       );
       await getDeckInfo(deckId);
       document.body.click();
@@ -161,7 +166,7 @@ const EditDeck = () => {
 
   let content;
 
-  if (currentDeck && currentDeck.owner === currentUser._id) {
+  if (currentDeck && currentDeck.userid === currentUser._id) {
     content = (
       <>
         <Row>
@@ -170,9 +175,11 @@ const EditDeck = () => {
               <Col xs={7}>
                 <Card.Body>
                   <Card.Title>
-                    <b>{currentDeck.title}</b>
+                    <b>{currentDeck.Title}</b>
                   </Card.Title>
-                  <Card.Text>Card count: {currentDeck.cards.length}</Card.Text>
+                  <Card.Text>
+                    Card count: {currentDeck.cards?.length || 0}
+                  </Card.Text>
                 </Card.Body>
               </Col>
               <Col xs={4} className="px-0">
@@ -200,7 +207,7 @@ const EditDeck = () => {
           </Card>
         </Row>
         <Row className="mt-4">
-          {!!currentDeck.cards.length ? (
+          {!!currentDeck.cards?.length ? (
             <>
               <Card style={{ height: "18rem" }}>
                 <Card.Body>
@@ -274,7 +281,7 @@ const EditDeck = () => {
           show={!!modalMode}
           mode={modalMode}
           handleClose={() => setModalMode("")}
-          currentCard={currentDeck.cards[shownCard - 1]}
+          currentCard={currentDeck.cards?.[shownCard - 1]}
           deleteHandler={deleteCard}
           modalFunction={modalMode === "Edit" ? updateCard : addCard}
         />

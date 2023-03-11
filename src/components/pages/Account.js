@@ -8,9 +8,10 @@ import { useNavigate } from "react-router-dom";
 const Account = () => {
   const { getLoggedIn, currentUser } = useContext(AuthContext);
 
-  const [firstName, setFirstName] = useState(currentUser.firstName);
-  const [lastName, setLastName] = useState(currentUser.lastName);
+  const [firstname, setfirstname] = useState(currentUser.firstname);
+  const [lastname, setlastname] = useState(currentUser.lastname);
   const [error, setError] = useState(false);
+  const token = localStorage.getItem("token");
 
   const navigate = useNavigate();
 
@@ -22,10 +23,14 @@ const Account = () => {
 
   const editAccountInfo = async () => {
     try {
-      await axios.patch("https://memory-card-backend.onrender.com/auth/edit", {
-        firstName,
-        lastName,
-      });
+      await axios.put(
+        "https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/edituserinfo",
+        {
+          firstname,
+          lastname,
+          jwtToken: token,
+        }
+      );
       await logoutHandler();
     } catch (err) {
       if (err.response.data.errorMessage) {
@@ -53,9 +58,9 @@ const Account = () => {
             <Col xs={7}>
               <Form.Control
                 type="text"
-                value={firstName}
+                value={firstname}
                 onChange={(e) => {
-                  setFirstName(e.target.value);
+                  setfirstname(e.target.value);
                 }}
                 maxLength={20}
               />
@@ -68,9 +73,9 @@ const Account = () => {
             <Col xs={7}>
               <Form.Control
                 type="text"
-                value={lastName}
+                value={lastname}
                 onChange={(e) => {
-                  setLastName(e.target.value);
+                  setlastname(e.target.value);
                 }}
                 maxLength={20}
               />
@@ -88,7 +93,7 @@ const Account = () => {
             <Button
               className="w-25 ms-auto me-3"
               onClick={editAccountInfo}
-              disabled={!firstName.length || !lastName.length}
+              disabled={!firstname.length || !lastname.length}
             >
               Save
             </Button>

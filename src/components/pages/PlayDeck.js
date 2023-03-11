@@ -15,9 +15,14 @@ const PlayDeck = () => {
   const getDeckInfo = async (id) => {
     try {
       const response = await axios.get(
-        `https://memory-card-backend.onrender.com/deck/${id}`
+        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/getdeckbyid/${id}`
       );
-      setCurrentDeck(response.data);
+
+      setCurrentDeck({
+        Title: response.data.Item.Title.S.replace("%20", " "),
+        deckID: response.data.Item.deckID.S,
+        userid: response.data.Item.userid.S,
+      });
     } catch (err) {
       if (err.response.data.errorMessage) {
         setError(err.response.data.errorMessage);
@@ -54,14 +59,16 @@ const PlayDeck = () => {
           <Card>
             <Card.Body>
               <Card.Title>
-                <b>{currentDeck.title}</b>
+                <b>{currentDeck.Title}</b>
               </Card.Title>
-              <Card.Text>Card count: {currentDeck.cards.length}</Card.Text>
+              <Card.Text>
+                Card count: {currentDeck.cards?.length || 0}
+              </Card.Text>
             </Card.Body>
           </Card>
         </Row>
         <Row className="mt-4">
-          {!!currentDeck.cards.length ? (
+          {!!currentDeck.cards?.length ? (
             <>
               {" "}
               <Card style={{ height: "18rem" }}>
@@ -95,14 +102,14 @@ const PlayDeck = () => {
                 </Button>
                 <Form.Control
                   type="number"
-                  max={currentDeck.cards.length}
+                  max={currentDeck.cards?.length}
                   min={1}
                   value={numInput}
                   onChange={shownCardChanger}
                 />
                 <Button
                   onClick={() => {
-                    if (shownCard + 1 <= currentDeck.cards.length) {
+                    if (shownCard + 1 <= currentDeck.cards?.length) {
                       setNumInput(shownCard + 1);
                       setShownCard((prev) => prev + 1);
                     }

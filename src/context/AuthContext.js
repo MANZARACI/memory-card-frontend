@@ -11,15 +11,15 @@ const AuthContextProvider = (props) => {
     const token = localStorage.getItem("token");
 
     if (token) {
-      axios.defaults.headers.common["x-auth-token"] = token;
-      const response = await axios.get("https://memory-card-backend.onrender.com/auth/loggedIn");
+      const response = await axios.get(
+        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/isuserloggedin/${token}`
+      );
 
-      setLoggedIn(response.data.isLoggedIn);
-      if (response.data.isLoggedIn) {
+      setLoggedIn(response.data.isLoggedIn === "true");
+      if (response.data.isLoggedIn === "true") {
         setCurrentUser(response.data.user);
       }
     } else {
-      delete axios.defaults.headers.common["x-auth-token"];
       setLoggedIn(false);
       setCurrentUser(false);
     }

@@ -23,7 +23,7 @@ const DecksList = () => {
   const getDecksByOwnerId = async (id) => {
     try {
       const response = await axios.get(
-        `https://memory-card-backend.onrender.com/deck/user/${id}`
+        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/getdeckbyownerid/${id}`
       );
       setDecks(response.data);
     } catch (err) {
@@ -40,7 +40,7 @@ const DecksList = () => {
   const deleteDeck = async (id) => {
     try {
       await axios.delete(
-        `https://memory-card-backend.onrender.com/deck/${id}`
+        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/deletebyid/${id}`
       );
       await getDecksByOwnerId(ownerId);
     } catch (err) {
@@ -60,7 +60,7 @@ const DecksList = () => {
           <Popover.Body>
             <Button
               onClick={() => {
-                deleteDeck(deck._id);
+                deleteDeck(deck.deckID);
                 document.body.click();
               }}
               variant="danger"
@@ -78,9 +78,9 @@ const DecksList = () => {
             <Col xs={8}>
               <Card.Body>
                 <Card.Title>
-                  <b>{deck.title}</b>
+                  <b>{deck.Title.replace("%20", " ")}</b>
                 </Card.Title>
-                <Card.Text>Card count: {deck.cards.length}</Card.Text>
+                <Card.Text>Card count: {deck.cards?.length || 0}</Card.Text>
                 {loggedIn && currentUser._id === ownerId && (
                   <OverlayTrigger
                     trigger="click"
@@ -95,11 +95,11 @@ const DecksList = () => {
             </Col>
             <Col xs={3} className="px-0">
               <Card.Body className="px-0">
-                <Link to={`/deck/${deck._id}`}>
+                <Link to={`/deck/${deck.deckID}`}>
                   <Button className="w-100">Play</Button>
                 </Link>
                 {loggedIn && currentUser._id === ownerId && (
-                  <Link to={`/deck/edit/${deck._id}`}>
+                  <Link to={`/deck/edit/${deck.deckID}`}>
                     <Button variant="secondary" className="w-100 mt-1">
                       Edit
                     </Button>
