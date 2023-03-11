@@ -35,9 +35,10 @@ const EditDeck = () => {
       );
 
       setCurrentDeck({
-        Title: response.data.Item.Title.S.replace("%20", " "),
-        deckID: response.data.Item.deckID.S,
-        userid: response.data.Item.userid.S,
+        Title: response.data.Title.replace("%20", " "),
+        deckID: response.data.deckID,
+        userid: response.data.userid,
+        Cards: response.data.Cards || [],
       });
     } catch (err) {
       if (err.response.data.errorMessage) {
@@ -61,7 +62,7 @@ const EditDeck = () => {
   const shownCardChanger = (e) => {
     setNumInput(e.target.value);
 
-    if (e.target.value >= 1 && e.target.value <= currentDeck.cards.length) {
+    if (e.target.value >= 1 && e.target.value <= currentDeck.Cards.length) {
       setShownCard(e.target.value);
     }
   };
@@ -178,7 +179,7 @@ const EditDeck = () => {
                     <b>{currentDeck.Title}</b>
                   </Card.Title>
                   <Card.Text>
-                    Card count: {currentDeck.cards?.length || 0}
+                    Card count: {currentDeck.Cards?.length || 0}
                   </Card.Text>
                 </Card.Body>
               </Col>
@@ -207,12 +208,12 @@ const EditDeck = () => {
           </Card>
         </Row>
         <Row className="mt-4">
-          {!!currentDeck.cards?.length ? (
+          {!!currentDeck.Cards?.length ? (
             <>
               <Card style={{ height: "18rem" }}>
                 <Card.Body>
                   <h1 style={{ textAlign: "center", paddingTop: "4rem" }}>
-                    {currentDeck.cards[shownCard - 1][shownSide]}
+                    {currentDeck.Cards[shownCard - 1][shownSide]}
                   </h1>
                 </Card.Body>
                 <Stack direction="horizontal" className="mb-3">
@@ -249,14 +250,14 @@ const EditDeck = () => {
                 </Button>
                 <Form.Control
                   type="number"
-                  max={currentDeck.cards.length}
+                  max={currentDeck.Cards.length}
                   min={1}
                   value={numInput}
                   onChange={shownCardChanger}
                 />
                 <Button
                   onClick={() => {
-                    if (shownCard + 1 <= currentDeck.cards.length) {
+                    if (shownCard + 1 <= currentDeck.Cards.length) {
                       setNumInput(shownCard + 1);
                       setShownCard((prev) => prev + 1);
                     }
@@ -281,7 +282,7 @@ const EditDeck = () => {
           show={!!modalMode}
           mode={modalMode}
           handleClose={() => setModalMode("")}
-          currentCard={currentDeck.cards?.[shownCard - 1]}
+          currentCard={currentDeck.Cards?.[shownCard - 1]}
           deleteHandler={deleteCard}
           modalFunction={modalMode === "Edit" ? updateCard : addCard}
         />

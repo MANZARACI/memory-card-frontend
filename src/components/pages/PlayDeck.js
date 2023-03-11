@@ -19,9 +19,10 @@ const PlayDeck = () => {
       );
 
       setCurrentDeck({
-        Title: response.data.Item.Title.S.replace("%20", " "),
-        deckID: response.data.Item.deckID.S,
-        userid: response.data.Item.userid.S,
+        Title: response.data.Title.replace("%20", " "),
+        deckID: response.data.deckID,
+        userid: response.data.userid,
+        cards: response.data.Cards || [],
       });
     } catch (err) {
       if (err.response.data.errorMessage) {

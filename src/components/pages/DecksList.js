@@ -80,7 +80,7 @@ const DecksList = () => {
                 <Card.Title>
                   <b>{deck.Title.replace("%20", " ")}</b>
                 </Card.Title>
-                <Card.Text>Card count: {deck.cards?.length || 0}</Card.Text>
+                <Card.Text>Card count: {deck.Cards?.length || 0}</Card.Text>
                 {loggedIn && currentUser._id === ownerId && (
                   <OverlayTrigger
                     trigger="click"
