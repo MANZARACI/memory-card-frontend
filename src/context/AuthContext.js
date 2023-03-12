@@ -12,7 +12,7 @@ const AuthContextProvider = (props) => {
 
     if (token) {
       const response = await axios.get(
-        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/isuserloggedin/${token}`
+        `https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/isuserloggedin/${token}`
       );
 
       setLoggedIn(response.data.isLoggedIn === "true");

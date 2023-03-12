@@ -31,7 +31,7 @@ const EditDeck = () => {
   const getDeckInfo = async (id) => {
     try {
       const response = await axios.get(
-        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/getdeckbyid/${id}`
+        `https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/getdeckbyid/${id}`
       );
 
       setCurrentDeck({
@@ -70,7 +70,7 @@ const EditDeck = () => {
   const addCard = async (card) => {
     try {
       await axios.patch(
-        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/addcardtodeck/${deckId}`,
+        ` https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/addcardtodeck/${deck}`,
         { card: card }
       );
       await getDeckInfo(deckId);
@@ -87,7 +87,7 @@ const EditDeck = () => {
   const updateCard = async (card) => {
     try {
       await axios.patch(
-        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/updatecardbyid/${deckId}/${
+        `https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/updatecardbyid/${deckId}/${
           shownCard - 1
         }`,
         { card: card }
@@ -105,7 +105,7 @@ const EditDeck = () => {
   const deleteCard = async () => {
     try {
       await axios.delete(
-        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/deletecardbyid/${deckId}/${
+        `https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/deletecardbyid/${deckId}/${
           shownCard - 1
         }`
       );
@@ -126,7 +126,7 @@ const EditDeck = () => {
   const updateTitle = async () => {
     try {
       await axios.put(
-        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/updatedecktitle/${currentDeck.deckID}/${newTitle}`
+        `https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/updatedecktitle/${currentDeck.deckID}/${newTitle}`
       );
       await getDeckInfo(deckId);
       document.body.click();
