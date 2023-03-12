@@ -70,7 +70,7 @@ const EditDeck = () => {
   const addCard = async (card) => {
     try {
       await axios.patch(
-        ` https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/addcardtodeck/${deckId}`,
+        `https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/addcardtodeck/${deckId}`,
         { card: card }
       );
       await getDeckInfo(deckId);
