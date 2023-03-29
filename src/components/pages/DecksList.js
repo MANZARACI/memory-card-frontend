@@ -19,11 +19,12 @@ const DecksList = () => {
   const { ownerId } = useParams();
 
   const { loggedIn, currentUser } = useContext(AuthContext);
+  const token = localStorage.getItem("token");
 
   const getDecksByOwnerId = async (id) => {
     try {
       const response = await axios.get(
-        `https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/getdeckbyownerid/${id}`
+        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/getdeckbyownerid/${id}`
       );
       setDecks(response.data);
     } catch (err) {
@@ -40,10 +41,14 @@ const DecksList = () => {
   const deleteDeck = async (id) => {
     try {
       await axios.delete(
-        `https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/deletedeckbyid/${id}`
+        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/deletebyid/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
       await getDecksByOwnerId(ownerId);
     } catch (err) {
+      console.log(err);
       if (err.response.data.errorMessage) {
         setError(err.response.data.errorMessage);
       }

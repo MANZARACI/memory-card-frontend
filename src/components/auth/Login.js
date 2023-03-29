@@ -21,14 +21,17 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        "https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/login",
+        "https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/login",
         data
       );
-      const responseBody = JSON.parse(response.data.body);
-      localStorage.setItem("token", responseBody.token);
-      await getLoggedIn();
-      navigate("/");
+
+      if (response.data.body.token) {
+        localStorage.setItem("token", response.data.body.token);
+        await getLoggedIn();
+        navigate("/");
+      }
     } catch (err) {
+      console.log(err);
       if (err.response.data.errorMessage) {
         setError(err.response.data.errorMessage);
       }

@@ -21,19 +21,20 @@ const Register = () => {
   const onSubmit = async (data) => {
     try {
       await axios.post(
-        "https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/registration",
+        "https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/register",
         data
       );
 
       const loginResponse = await axios.post(
-        "https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/login",
+        "https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/login",
         data
       );
 
-      const responseBody = JSON.parse(loginResponse.data.body);
-      localStorage.setItem("token", responseBody.token);
-      await getLoggedIn();
-      navigate("/");
+      if (loginResponse.data.body.token) {
+        localStorage.setItem("token", loginResponse.data.body.token);
+        await getLoggedIn();
+        navigate("/");
+      }
     } catch (err) {
       if (err.response.data.errorMessage) {
         setError(err.response.data.errorMessage);
@@ -86,7 +87,10 @@ const Register = () => {
           <p className={classess.errorText}>Email must be valid</p>
         )}
         <Form.Group className="mt-3" controlId="password">
-          <Form.Label>Password</Form.Label>
+          <Form.Label>
+            Password (Must have 1 uppercase character, 1 special character, and
+            1 numeric character)
+          </Form.Label>
           <Form.Control
             type="password"
             {...register("password", { required: true, minLength: 6 })}

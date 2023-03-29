@@ -25,13 +25,14 @@ const EditDeck = () => {
   const [newTitle, setNewTitle] = useState("");
 
   const { deckId } = useParams();
+  const token = localStorage.getItem("token");
 
   const { currentUser } = useContext(AuthContext);
 
   const getDeckInfo = async (id) => {
     try {
       const response = await axios.get(
-        `https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/getdeckbyid/${id}`
+        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/getdeckbyid/${id}`
       );
 
       setCurrentDeck({
@@ -70,8 +71,11 @@ const EditDeck = () => {
   const addCard = async (card) => {
     try {
       await axios.patch(
-        `https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/addcardtodeck/${deckId}`,
-        { card: card }
+        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/addcardtodeck/${deckId}`,
+        { card: card },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
       await getDeckInfo(deckId);
       setModalMode("");
@@ -87,10 +91,13 @@ const EditDeck = () => {
   const updateCard = async (card) => {
     try {
       await axios.patch(
-        `https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/updatecardbyid/${deckId}/${
+        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/updatecardbyid/${deckId}/${
           shownCard - 1
         }`,
-        { card: card }
+        { card: card },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
       await getDeckInfo(deckId);
       setModalMode("");
@@ -105,9 +112,12 @@ const EditDeck = () => {
   const deleteCard = async () => {
     try {
       await axios.delete(
-        `https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/deletecardbyid/${deckId}/${
+        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/deletecardbyid/${deckId}/${
           shownCard - 1
-        }`
+        }`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
       await getDeckInfo(deckId);
       if (shownCard !== 1) {
@@ -126,7 +136,11 @@ const EditDeck = () => {
   const updateTitle = async () => {
     try {
       await axios.put(
-        `https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/updatedecktitle/${currentDeck.deckID}/${newTitle}`
+        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/updatedecktitle/${currentDeck.deckID}/${newTitle}`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
       await getDeckInfo(deckId);
       document.body.click();

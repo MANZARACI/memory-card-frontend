@@ -24,14 +24,15 @@ const Account = () => {
   const editAccountInfo = async () => {
     try {
       await axios.put(
-        "https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/edituserinfo",
+        "https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/edituserinfo",
         {
           firstname,
           lastname,
-          jwtToken: token,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-      await logoutHandler();
     } catch (err) {
       if (err.response.data.errorMessage) {
         setError(err.response.data.errorMessage);
