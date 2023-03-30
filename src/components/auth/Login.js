@@ -27,15 +27,22 @@ const Login = () => {
         data
       );
 
-      if (response.data.body.token) {
-        localStorage.setItem("token", response.data.body.token);
-        await getLoggedIn();
-        navigate("/");
+      try {
+        const body = JSON.parse(response.data.body);
+        if (body.error !== undefined) {
+          addToast({ type: "error", message: "Failed to sign in" });
+          return;
+        }
+      } catch {
+        if (response.data.body.token) {
+          localStorage.setItem("token", response.data.body.token);
+          await getLoggedIn();
+          navigate("/");
+        }
+        addToast({ type: "success", message: "Welcome to cardify!" });
       }
-      addToast({ type: "success", message: "Welcome to cardify!" });
     } catch (err) {
       addToast({ type: "error", message: "Failed to sign in" });
-      console.log(err);
       if (err.response.data.errorMessage) {
         setError(err.response.data.errorMessage);
       }

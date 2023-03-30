@@ -32,11 +32,19 @@ const Register = () => {
         data
       );
 
-      if (loginResponse.data.body.token) {
-        localStorage.setItem("token", loginResponse.data.body.token);
-        await getLoggedIn();
-        navigate("/");
-        addToast({ type: "success", message: "Successfully registered" });
+      try {
+        const body = JSON.parse(loginResponse.data.body);
+        if (body.error !== undefined) {
+          addToast({ type: "error", message: "Failed to register" });
+          return;
+        }
+      } catch {
+        if (loginResponse.data.body.token) {
+          localStorage.setItem("token", loginResponse.data.body.token);
+          await getLoggedIn();
+          navigate("/");
+          addToast({ type: "success", message: "Successfully registered" });
+        }
       }
     } catch (err) {
       addToast({ type: "error", message: "Failed to register" });
