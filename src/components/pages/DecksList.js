@@ -11,6 +11,7 @@ import {
   OverlayTrigger,
 } from "react-bootstrap";
 import AuthContext from "../../context/AuthContext";
+import { useToastContext } from "../../context/ToastContext";
 
 const DecksList = () => {
   const [decks, setDecks] = useState(false);
@@ -19,14 +20,18 @@ const DecksList = () => {
   const { ownerId } = useParams();
 
   const { loggedIn, currentUser } = useContext(AuthContext);
+  const token = localStorage.getItem("token");
+
+  const addToast = useToastContext();
 
   const getDecksByOwnerId = async (id) => {
     try {
       const response = await axios.get(
-        `https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/getdeckbyownerid/${id}`
+        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/getdeckbyownerid/${id}`
       );
       setDecks(response.data);
     } catch (err) {
+      addToast({ type: "error", message: "Failed to load decks" });
       if (err.response.data.errorMessage) {
         setError(err.response.data.errorMessage);
       }
@@ -40,10 +45,16 @@ const DecksList = () => {
   const deleteDeck = async (id) => {
     try {
       await axios.delete(
-        `https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/deletedeckbyid/${id}`
+        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/deletebyid/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
       await getDecksByOwnerId(ownerId);
+      addToast({ type: "success", message: "Deleted deck" });
     } catch (err) {
+      addToast({ type: "error", message: "Failed to delete deck" });
+      console.log(err);
       if (err.response.data.errorMessage) {
         setError(err.response.data.errorMessage);
       }

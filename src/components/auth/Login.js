@@ -5,12 +5,14 @@ import { useForm } from "react-hook-form";
 import classess from "./Auth.module.css";
 import axios from "axios";
 import AuthContext from "../../context/AuthContext";
+import { useToastContext } from "../../context/ToastContext";
 
 const Login = () => {
   const [error, setError] = useState(false);
 
   const { getLoggedIn } = useContext(AuthContext);
   const navigate = useNavigate();
+  const addToast = useToastContext();
 
   const {
     register,
@@ -21,14 +23,26 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        "https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/login",
+        "https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/login",
         data
       );
-      const responseBody = JSON.parse(response.data.body);
-      localStorage.setItem("token", responseBody.token);
-      await getLoggedIn();
-      navigate("/");
+
+      try {
+        const body = JSON.parse(response.data.body);
+        if (body.error !== undefined) {
+          addToast({ type: "error", message: "Failed to sign in" });
+          return;
+        }
+      } catch {
+        if (response.data.body.token) {
+          localStorage.setItem("token", response.data.body.token);
+          await getLoggedIn();
+          navigate("/");
+        }
+        addToast({ type: "success", message: "Welcome to cardify!" });
+      }
     } catch (err) {
+      addToast({ type: "error", message: "Failed to sign in" });
       if (err.response.data.errorMessage) {
         setError(err.response.data.errorMessage);
       }

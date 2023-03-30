@@ -13,6 +13,7 @@ import {
   OverlayTrigger,
 } from "react-bootstrap";
 import AuthContext from "../../context/AuthContext";
+import { useToastContext } from "../../context/ToastContext";
 import CustomCardModal from "../util/CustomCardModal";
 
 const EditDeck = () => {
@@ -23,15 +24,17 @@ const EditDeck = () => {
   const [numInput, setNumInput] = useState(1);
   const [modalMode, setModalMode] = useState("");
   const [newTitle, setNewTitle] = useState("");
+  const addToast = useToastContext();
 
   const { deckId } = useParams();
+  const token = localStorage.getItem("token");
 
   const { currentUser } = useContext(AuthContext);
 
   const getDeckInfo = async (id) => {
     try {
       const response = await axios.get(
-        `https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/getdeckbyid/${id}`
+        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/getdeckbyid/${id}`
       );
 
       setCurrentDeck({
@@ -41,6 +44,7 @@ const EditDeck = () => {
         Cards: response.data.Cards || [],
       });
     } catch (err) {
+      addToast({ type: "error", message: "Failed to load deck info" });
       if (err.response.data.errorMessage) {
         setError(err.response.data.errorMessage);
       }
@@ -68,15 +72,27 @@ const EditDeck = () => {
   };
 
   const addCard = async (card) => {
+    if (card[0] === card[1]) {
+      addToast({
+        type: "error",
+        message: "Failed to add card: Front and back cannot be the same",
+      });
+      return;
+    }
+
     try {
       await axios.patch(
-        `https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/addcardtodeck/${deckId}`,
-        { card: card }
+        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/addcardtodeck/${deckId}`,
+        { card: card },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
       await getDeckInfo(deckId);
       setModalMode("");
+      addToast({ type: "success", message: "Added new card" });
     } catch (err) {
-      console.log(err);
+      addToast({ type: "error", message: "Failed to add card" });
       if (err.response.data.errorMessage) {
         setError(err.response.data.errorMessage);
       }
@@ -87,14 +103,19 @@ const EditDeck = () => {
   const updateCard = async (card) => {
     try {
       await axios.patch(
-        `https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/updatecardbyid/${deckId}/${
+        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/updatecardbyid/${deckId}/${
           shownCard - 1
         }`,
-        { card: card }
+        { card: card },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
       await getDeckInfo(deckId);
+      addToast({ type: "success", message: "Updated card" });
       setModalMode("");
     } catch (err) {
+      addToast({ type: "error", message: "Failed to update card" });
       if (err.response.data.errorMessage) {
         setError(err.response.data.errorMessage);
       }
@@ -105,17 +126,22 @@ const EditDeck = () => {
   const deleteCard = async () => {
     try {
       await axios.delete(
-        `https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/deletecardbyid/${deckId}/${
+        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/deletecardbyid/${deckId}/${
           shownCard - 1
-        }`
+        }`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
       await getDeckInfo(deckId);
       if (shownCard !== 1) {
         setShownCard((prev) => prev - 1);
         setNumInput(shownCard - 1);
       }
+      addToast({ type: "success", message: "Deleted card" });
       setModalMode("");
     } catch (err) {
+      addToast({ type: "error", message: "Failed to delete card" });
       if (err.response.data.errorMessage) {
         setError(err.response.data.errorMessage);
       }
@@ -126,11 +152,17 @@ const EditDeck = () => {
   const updateTitle = async () => {
     try {
       await axios.put(
-        `https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/updatedecktitle/${currentDeck.deckID}/${newTitle}`
+        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/updatedecktitle/${currentDeck.deckID}/${newTitle}`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
       await getDeckInfo(deckId);
+      addToast({ type: "success", message: "Updated deck title" });
       document.body.click();
     } catch (err) {
+      addToast({ type: "error", message: "Failed to update deck title" });
       if (err.response.data.errorMessage) {
         setError(err.response.data.errorMessage);
       }
@@ -213,7 +245,7 @@ const EditDeck = () => {
               <Card style={{ height: "18rem" }}>
                 <Card.Body>
                   <h1 style={{ textAlign: "center", paddingTop: "4rem" }}>
-                    {currentDeck.Cards[shownCard - 1][shownSide]}
+                    {currentDeck?.Cards[shownCard - 1][shownSide]}
                   </h1>
                 </Card.Body>
                 <Stack direction="horizontal" className="mb-3">

@@ -4,6 +4,7 @@ import { Card, Col, Form, Row, Alert } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useToastContext } from "../../context/ToastContext";
 
 const Account = () => {
   const { getLoggedIn, currentUser } = useContext(AuthContext);
@@ -12,6 +13,7 @@ const Account = () => {
   const [lastname, setlastname] = useState(currentUser.lastname);
   const [error, setError] = useState(false);
   const token = localStorage.getItem("token");
+  const addToast = useToastContext();
 
   const navigate = useNavigate();
 
@@ -24,15 +26,18 @@ const Account = () => {
   const editAccountInfo = async () => {
     try {
       await axios.put(
-        "https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/edituserinfo",
+        "https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/edituserinfo",
         {
           firstname,
           lastname,
-          jwtToken: token,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-      await logoutHandler();
+      addToast({ type: "success", message: "Updated account info" });
     } catch (err) {
+      addToast({ type: "error", message: "Failed to update account info" });
       if (err.response.data.errorMessage) {
         setError(err.response.data.errorMessage);
       }

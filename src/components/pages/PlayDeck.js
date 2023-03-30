@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { Col, Card, Row, Button, Stack, Form, Alert } from "react-bootstrap";
+import { useToastContext } from "../../context/ToastContext";
 
 const PlayDeck = () => {
   const [currentDeck, setCurrentDeck] = useState(false);
@@ -9,13 +10,14 @@ const PlayDeck = () => {
   const [shownCard, setShownCard] = useState(1);
   const [shownSide, setShownSide] = useState(0); // 0 for front, 1 for back
   const [numInput, setNumInput] = useState(1);
+  const addToast = useToastContext();
 
   const { deckId } = useParams();
 
   const getDeckInfo = async (id) => {
     try {
       const response = await axios.get(
-        `https://ul6ksnhgw5.execute-api.us-east-1.amazonaws.com/dev/getdeckbyid/${id}`
+        `https://aqk0rsung8.execute-api.us-east-1.amazonaws.com/dev/getdeckbyid/${id}`
       );
 
       setCurrentDeck({
@@ -25,6 +27,7 @@ const PlayDeck = () => {
         cards: response.data.Cards || [],
       });
     } catch (err) {
+      addToast({ type: "error", message: "Failed to load deck info" });
       if (err.response.data.errorMessage) {
         setError(err.response.data.errorMessage);
       }
