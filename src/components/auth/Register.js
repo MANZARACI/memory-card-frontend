@@ -5,12 +5,14 @@ import { useForm } from "react-hook-form";
 import classess from "./Auth.module.css";
 import axios from "axios";
 import AuthContext from "../../context/AuthContext";
+import { useToastContext } from "../../context/ToastContext";
 
 const Register = () => {
   const [error, setError] = useState(false);
 
   const { getLoggedIn } = useContext(AuthContext);
   const navigate = useNavigate();
+  const addToast = useToastContext();
 
   const {
     register,
@@ -34,8 +36,10 @@ const Register = () => {
         localStorage.setItem("token", loginResponse.data.body.token);
         await getLoggedIn();
         navigate("/");
+        addToast({ type: "success", message: "Successfully registered" });
       }
     } catch (err) {
+      addToast({ type: "error", message: "Failed to register" });
       if (err.response.data.errorMessage) {
         setError(err.response.data.errorMessage);
       }

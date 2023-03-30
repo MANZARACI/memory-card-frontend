@@ -11,6 +11,7 @@ import {
   OverlayTrigger,
 } from "react-bootstrap";
 import AuthContext from "../../context/AuthContext";
+import { useToastContext } from "../../context/ToastContext";
 
 const DecksList = () => {
   const [decks, setDecks] = useState(false);
@@ -21,6 +22,8 @@ const DecksList = () => {
   const { loggedIn, currentUser } = useContext(AuthContext);
   const token = localStorage.getItem("token");
 
+  const addToast = useToastContext();
+
   const getDecksByOwnerId = async (id) => {
     try {
       const response = await axios.get(
@@ -28,6 +31,7 @@ const DecksList = () => {
       );
       setDecks(response.data);
     } catch (err) {
+      addToast({ type: "error", message: "Failed to load decks" });
       if (err.response.data.errorMessage) {
         setError(err.response.data.errorMessage);
       }
@@ -47,7 +51,9 @@ const DecksList = () => {
         }
       );
       await getDecksByOwnerId(ownerId);
+      addToast({ type: "success", message: "Deleted deck" });
     } catch (err) {
+      addToast({ type: "error", message: "Failed to delete deck" });
       console.log(err);
       if (err.response.data.errorMessage) {
         setError(err.response.data.errorMessage);

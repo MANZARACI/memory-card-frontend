@@ -3,6 +3,7 @@ import { Card, Form, Col, Button, Alert } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";
+import { useToastContext } from "../../context/ToastContext";
 
 const AddDeck = () => {
   const [title, setTitle] = useState("");
@@ -12,6 +13,7 @@ const AddDeck = () => {
   const token = localStorage.getItem("token");
 
   const navigate = useNavigate();
+  const addToast = useToastContext();
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -26,7 +28,9 @@ const AddDeck = () => {
         }
       );
       navigate(`/deckList/${currentUser._id}`);
+      addToast({ type: "success", message: "Created deck" });
     } catch (err) {
+      addToast({ type: "error", message: "Failed to create deck" });
       if (err.response.data.errorMessage) {
         setError(err.response.data.errorMessage);
       }
